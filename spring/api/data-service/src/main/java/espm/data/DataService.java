@@ -2,6 +2,7 @@ package espm.data;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,9 @@ public class DataService {
 
     @Autowired
     private DataRepository dataRepository;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     public void acquire(String sensor) {
         List<Map<String, Object>> sensorData = fetchSensorData(sensor);
@@ -65,18 +69,8 @@ public class DataService {
     }
 
     private List<Map<String, Object>> fetchSensorData(String sensor) {
-        // Simulação de dados para exemplo
-        return List.of(
-            Map.of(
-                "registroId", 1L,
-                "sensor", sensor,
-                "data", LocalDateTime.now().toString(),
-                "idSensor", (short)1,
-                "delta", 10,
-                "bateria", (short)90,
-                "entrada", 5,
-                "saida", 3
-            )
-        );
+        String url = "https://iagen.espm.br/sensores/dados?sensor=" + sensor;
+        List<Map<String, Object>> dados = restTemplate.getForObject(url, List.class);
+        return dados;
     }
 }
