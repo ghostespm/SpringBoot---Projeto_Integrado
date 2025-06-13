@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: account
+          uri: http://account:8081
+          predicates:
+            - Path=/account/**
+        - id: data
+          uri: http://data:8082
+          predicates:
+            - Path=/data/**
+        - id: auth
+          uri: http://auth:8083
+          predicates:
+            - Path=/auth/**
